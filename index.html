@@ -544,7 +544,8 @@ form.addEventListener('submit', e => {
   document.getElementById('ok').classList.add('on');
   let w = null;
   try { w = window.open(url, '_blank'); if (w) w.opener = null; } catch(_) {}
-  if (!w) { try { window.location.href = url; } catch(_) {} }
+  // espera curta para o Pixel enviar o Lead antes de sair da página
+  if (!w) { setTimeout(() => { try { window.location.href = url; } catch(_) {} }, 400); }
 });
 
 // abas das plantas
