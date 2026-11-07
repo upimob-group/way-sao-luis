@@ -509,6 +509,14 @@ const CONFIG = {
 };
 /* ================================================= */
 
+/* Canal do anúncio: ?canal=imob envia o lead ao WhatsApp oficial da imobiliária.
+   Sem o parâmetro, o lead vai ao WhatsApp do corretor (CONFIG acima). */
+const CANAIS = {
+  imob: { whatsapp: "5598984329779", saudacao: "equipe UP Imob" }
+};
+const canal = CANAIS[new URLSearchParams(location.search).get('canal')] || null;
+if (canal) CONFIG.whatsapp = canal.whatsapp;
+
 if (CONFIG.creciF) {
   document.getElementById('creciCorretor').textContent = 'Corretor · ' + CONFIG.creciF + ' · UP Imob Group';
   document.getElementById('creciRodape').textContent = ' · ' + CONFIG.creciF;
@@ -533,7 +541,7 @@ form.addEventListener('submit', e => {
   const nome = form.nome.value.trim();
   const renda = form.renda.value;
   const interesse = form.querySelector('input[name=interesse]:checked').value;
-  const msg = `Olá, ${CONFIG.corretor}! Vi o anúncio do ${CONFIG.empreendimento} e quero receber as condições.\n\n` +
+  const msg = `Olá, ${canal ? canal.saudacao : CONFIG.corretor}! Vi o anúncio do ${CONFIG.empreendimento} e quero receber as condições.\n\n` +
               `*Nome:* ${nome}\n*Renda familiar:* ${renda}\n*Interesse na compra:* ${interesse}`;
   const url = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg);
   try { if (window.fbq) fbq('track', 'Lead', {content_name: CONFIG.empreendimento}); } catch(_) {}
